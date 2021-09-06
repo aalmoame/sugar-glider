@@ -30,14 +30,12 @@ public class Main {
 
 
         List<Candy> candyList = ExcelReader.readFromFileStock("./server/resources/Inventory.xlsx");
-        List<Candy> lowStockCandy = Candy.lowStockCandy(candyList);
         List<Candy> finalCandyList = candyList;
 
         Candy restockElement = new Candy("Restock Cost", 0.0,0.0,0.0);
         finalCandyList.add(restockElement);
 
         List<Distributor> distributorList = ExcelReader.readFromFileDistributors("./server/resources/Distributors.xlsx");
-        List<Distributor> finalDistributorList = distributorList;
 
         Map<String, Double> lowestCostCandy = Distributor.lowestCostDistributors(distributorList);
         Map<String, Double> finalLowestCostCandy = lowestCostCandy;
@@ -60,7 +58,7 @@ public class Main {
         get("/low-stock", (request, response) -> {
             response.type("application/json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(gson.toJsonTree(lowStockCandy));
+            return gson.toJson(gson.toJsonTree(Candy.lowStockCandy(finalCandyList)));
         });
 
         //TODO: Return JSON containing the total cost of restocking candy
@@ -76,7 +74,6 @@ public class Main {
                     }
                 }
             }
-
             response.redirect("http://localhost:3000");
             return restockElement.getCapacity();
         });
