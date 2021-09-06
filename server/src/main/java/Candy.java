@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Candy{
 
@@ -14,6 +16,16 @@ public class Candy{
         this.stock = stock;
         this.capacity = capacity;
         this.id = id;
+    }
+
+    public static List<Candy> lowStockCandy(List<Candy> candyList){
+        List<Candy> lowStock = new ArrayList<>();
+        for(Candy candy : candyList){
+            if(candy.isLowStock()){
+                lowStock.add(candy);
+            }
+        }
+        return lowStock;
     }
 
     public String getName() {

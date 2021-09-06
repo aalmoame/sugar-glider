@@ -20,7 +20,6 @@
 
     var data = await response.json();
     console.log(data);
-
     show(data);
   }
 
@@ -32,22 +31,37 @@
 
     for (const {name, stock, capacity, id} of data) {
 
-        var nameTemp = JSON.stringify(name);
-        tab += `<tr>
-        <td>${id}</td>
-        <td>${name} </td>
-        <td>${stock}</td>
-        <td>${capacity}</td>
-        <td>
-        <input type="text" name=${nameTemp} class="form-control"/>
-        </td>
-        </tr>`;
-    }
+        if(name == "Restock Cost"){
+          var nameTemp = JSON.stringify(name);
+          tab += `<tr>
+          <td>Restock Cost</td>
+          <td>
+          <input type="text" name=${nameTemp} class="form-control" value=${capacity} disabled/>
+          </td>
+          <td></td>
+          <td></td>
+          <td>
+          </td></tr>`;
+
+        }
+        else{
+          var nameTemp = JSON.stringify(name);
+          tab += `<tr>
+          <td>${id}</td>
+          <td>${name} </td>
+          <td>${stock}</td>
+          <td>${capacity}</td>
+          <td>
+          <input type="text" name=${nameTemp} class="form-control"/>
+          </td></tr>`;
+        }
+
+      }
 
       // Setting innerHTML as tab variable
       document.getElementById("candies").innerHTML = tab;
 
+     }
 
-  }
   </script>
 </html>

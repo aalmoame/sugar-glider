@@ -1,3 +1,7 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Distributor {
     private String candyName;
     private double id;
@@ -10,6 +14,25 @@ public class Distributor {
     }
 
     public Distributor() {
+    }
+
+    public static Map<String, Double> lowestCostDistributors(List<Distributor> distributorList){
+
+        Map<String, Double> lowestCost = new HashMap<>();
+
+        for(Distributor distributor : distributorList){
+
+            if(!lowestCost.containsKey(distributor.getCandyName())){
+                lowestCost.put(distributor.getCandyName(), distributor.getCost());
+            }
+            else if(distributor.getCost() < lowestCost.get(distributor.getCandyName())){
+                lowestCost.replace(distributor.getCandyName(), distributor.getCost());
+            }
+
+        }
+
+        return lowestCost;
+
     }
 
     public String getCandyName() {
