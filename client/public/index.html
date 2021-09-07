@@ -33,15 +33,12 @@
 
         if(name == "Restock Cost"){
           var nameTemp = JSON.stringify(name);
-          tab += `<tr>
-          <td>Restock Cost</td>
-          <td>
-          <input type="text" name=${nameTemp} class="form-control" value=${capacity} disabled/>
-          </td>
-          <td></td>
-          <td></td>
-          <td>
-          </td></tr>`;
+
+          tab+= `
+          <div class="container">
+            <h5> Restock Cost: $${capacity}</h5>
+          </div>`;
+
 
         }
         else{

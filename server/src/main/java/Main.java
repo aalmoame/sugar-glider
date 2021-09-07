@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.math3.util.Precision;
 import spark.TemplateEngine;
 
 import java.io.IOException;
@@ -30,57 +31,56 @@ public class Main {
 
 
         List<Candy> candyList = ExcelReader.readFromFileStock("./server/resources/Inventory.xlsx");
-        List<Candy> finalCandyList = candyList;
 
         Candy restockElement = new Candy("Restock Cost", 0.0,0.0,0.0);
-        finalCandyList.add(restockElement);
+        candyList.add(restockElement);
 
         List<Distributor> distributorList = ExcelReader.readFromFileDistributors("./server/resources/Distributors.xlsx");
-
         Map<String, Double> lowestCostCandy = Distributor.lowestCostDistributors(distributorList);
-        Map<String, Double> finalLowestCostCandy = lowestCostCandy;
 
 
         //This is required to allow the React app to communicate with this API
         before((request, response) -> response.header("Access-Control-Allow-Origin", "http://localhost:3000"));
-        after((req, res) -> {
-            res.type("application/json");
-        });
 
 
         get("/", (request, response) -> {
             response.type("application/json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(gson.toJsonTree(finalCandyList));
+            return gson.toJson(gson.toJsonTree(candyList));
         });
 
         //TODO: Return JSON containing the candies for which the stock is less than 25% of it's capacity
         get("/low-stock", (request, response) -> {
             response.type("application/json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(gson.toJsonTree(Candy.lowStockCandy(finalCandyList)));
+            return gson.toJson(gson.toJsonTree(Candy.lowStockCandy(candyList)));
         });
 
         //TODO: Return JSON containing the total cost of restocking candy
         post("/restock-cost", (request, response) -> {
             Set<String> candyNames = request.queryParams();
+
+            //using capacity variable as the placeholder for cost
             restockElement.setCapacity(0.0);
+
+            double cost = 0.0;
             for(String candies : candyNames){
-                if(!request.queryParams(candies).isEmpty() && finalLowestCostCandy.containsKey(candies)){
+                if(!request.queryParams(candies).isEmpty() && lowestCostCandy.containsKey(candies)){
                     try {
-                        restockElement.setCapacity(restockElement.getCapacity() + finalLowestCostCandy.get(candies) * Double.parseDouble(request.queryParams(candies)));
+                        cost += lowestCostCandy.get(candies) * Double.parseDouble(request.queryParams(candies));
                     }catch (NumberFormatException e){
                         e.printStackTrace();
                     }
                 }
             }
+            restockElement.setCapacity(Precision.round(cost, 2));
             response.redirect("http://localhost:3000");
             return restockElement.getCapacity();
         });
 
         post("/submit-order", (request, response) -> {
             Set<String> candyNames = request.queryParams();
-            for(Candy candy : finalCandyList){
+            for(Candy candy : candyList){
                 if(candyNames.contains(candy.getName()) && !request.queryParams(candy.getName()).isEmpty()){
 
                     try{
