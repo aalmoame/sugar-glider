@@ -7,9 +7,8 @@ export default function Challenge() {
     <div class="container">
         <a class="navbar-brand" href="http://localhost:3000">
           <img src={image} alt="" width="70" height="50" class="d-inline-block"></img>
-
-          <label style={{fontSize: 30, fontFamily:"Sofia", float:'right', paddingLeft:20}} class="font-effect-shadow-multiple">Randy's Candies</label>
         </a>
+        <label style={{fontSize: 30, fontFamily:"Sofia"}} class="font-effect-shadow-multiple text-primary">Randy's Candies</label>
     </div>
 
     <div class="card">

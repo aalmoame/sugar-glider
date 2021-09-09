@@ -25,7 +25,7 @@ public class Main {
                             "content-type");
 
                     response.header("Access-Control-Allow-Methods",
-                            "GET, POST, OPTIONS");
+                            "GET, POST");
 
 
                     return "OK";
@@ -64,7 +64,13 @@ public class Main {
         get("/low-stock", (request, response) -> {
             response.type("application/json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(gson.toJsonTree(Candy.lowStockCandy(candyList)));
+
+            //unfortunately have to create a new list in order to remove the restock element
+            //could just return a sublist but potential additions of candy later would make it difficult
+            List<Candy> removedRestock = new ArrayList<>(candyList);
+            removedRestock.remove(restockElement);
+
+            return gson.toJson(gson.toJsonTree(Candy.lowStockCandy(removedRestock)));
         });
 
         //TODO: Return JSON containing the total cost of restocking candy
@@ -104,6 +110,8 @@ public class Main {
             return gson.toJson(gson.toJsonTree((restockElement.getCapacity())));
         });
 
+
+        //added this method as a way to test low stock and also because I thought it would be neat to have there
         post("/submit-order", (request, response) -> {
 
             //getting input
@@ -132,7 +140,7 @@ public class Main {
                 }
             }
             response.redirect("http://localhost:3000");
-            return null;
+            return "Order Submitted";
         });
 
     }
