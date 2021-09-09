@@ -4,16 +4,15 @@ export default function Challenge() {
   return (
     <>
 
-    <nav class="navbar navbar-light bg-light">
-      <div class="container-fluid">
+    <div class="container">
         <a class="navbar-brand" href="http://localhost:3000">
           <img src={image} alt="" width="70" height="50" class="d-inline-block"></img>
-          <p class="fs-1">Randy's Candy</p>
-        </a>
-      </div>
-    </nav>
 
-    <div class="card ">
+          <label style={{fontSize: 30, fontFamily:"Sofia", float:'right', paddingLeft:20}} class="font-effect-shadow-multiple">Randy's Candies</label>
+        </a>
+    </div>
+
+    <div class="card">
     <form method="POST" id="myForm">
       <table class="table table-striped table-hover">
         <thead>
